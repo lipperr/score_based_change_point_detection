@@ -67,7 +67,6 @@ def compute_test_stat_kliep(X, window_size=10, sigma=0.1, threshold=math.inf):
         T[t] = kliep(X_te, X_re, sigma)
         
         if T[t] > threshold:
-        
             stopping_time = t
             break
     
