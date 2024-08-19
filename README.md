@@ -1,1 +1,1 @@
-This repository containes code for practical experiments and implementations of several CPD algorithms uncluding new method called "Score-based change point detection". 
+This repository containes code for numerical experiments and implementations of several online change point detection algorithms. The description of the experiments can be found in the paper "Score-based change point detection via tracking the best of infinitely many experts" by A. Markovich, N. Puchkin.
