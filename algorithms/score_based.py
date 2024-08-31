@@ -1,5 +1,6 @@
 # Score-based change point detection algorithm from the paper
-# 
+# "Score-based change point detection via tracking the best of infinitely many experts"
+# (https://arxiv.org/abs/2408.14073)
 # by A. Markovich, N. Puchkin
 
 import numpy as np
