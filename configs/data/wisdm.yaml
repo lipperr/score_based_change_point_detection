@@ -1,0 +1,5 @@
+_target_: datasets.WISDM
+dim: 3
+part: "val"
+path: "data/WISDM/sample_0.csv"
+save_path: ${runner.save_path}

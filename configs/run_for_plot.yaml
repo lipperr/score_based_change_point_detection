@@ -1,0 +1,64 @@
+defaults:
+  - data: "gaussian_3dmean"
+  - _self_
+
+instances:
+  fs:
+    _target_: algorithms.fs.FS
+    alpha: 1e-4
+    threshold: 0
+    ew_params: 
+      xdim: ${data.dim}
+      lambda_: 0.1
+      eta: 0.2
+      gamma: 0.1
+      basis: 
+        _target_: algorithms.ew.PolyBasis
+        degree: 2
+        xdim: ${data.dim}
+      eta_type: "const"
+    
+
+    
+  flh:
+    _target_: algorithms.flh.FLH
+    alpha: 0.5
+    threshold: 0
+    ew_params: 
+      xdim: ${data.dim}
+      lambda_: 1.5
+      eta: 0.2
+      gamma: 1e-6
+      basis: 
+        _target_: algorithms.ew.PolyBasis
+        degree: 2
+        xdim: ${data.dim}
+      eta_type: "const"
+
+
+  falcon:
+    _target_: algorithms.fast_contrastive_change_point.FALCON
+    p: 1
+    beta: 0.1
+    design: "multivariate" # design='hermite'
+    threshold: 6.46
+
+  kliep:
+    _target_: algorithms.kliep.KLIEP
+    window_size: 20
+    sigma: 0.2
+    threshold: 28.23
+
+  mstat:
+    _target_: algorithms.m_statistic.Mstatistic
+    window_size: 20
+    sigma: 2
+    threshold: 5.23
+
+runner:
+  seed: 1
+  save_path: "results/"
+  dataset_name: "gaussian_3dstd"
+  mode: "changepoint" # TODO "stationary"
+
+  

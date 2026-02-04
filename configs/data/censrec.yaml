@@ -1,0 +1,5 @@
+_target_: datasets.censrec.CENSREC
+dim: 1
+part: "" # "val", "test"
+data_part: "" # "clean", "snr15", "snr20"
+save_path: ${runner.save_path}

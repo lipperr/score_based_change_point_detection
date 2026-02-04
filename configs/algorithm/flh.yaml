@@ -1,0 +1,14 @@
+_target_: algorithms.flh.FLH
+alpha: 1e-4
+ew_params: 
+  xdim: ${data.dim}
+  lambda_: 5
+  eta: 1
+  gamma: 1e-6
+  basis: 
+    _target_: algorithms.ew.PolyBasis
+    degree: 2
+    xdim: ${data.dim}
+    include_cross: False
+  reference_score: False
+  eta_type: "const"

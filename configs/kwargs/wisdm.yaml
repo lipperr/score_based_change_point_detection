@@ -1,0 +1,47 @@
+fs:
+  # val
+  # alpha_list: [5e-4, 1e-3]
+  # lambda_list: [0.1, 0.3]
+  # eta_list: [0.1, 0.2]
+  # gamma_list: [0.1, 0.2, 0.3]
+
+  # test 0.0005,0.1,0.2,0.2
+  # alpha_list: [1e-3]
+  # lambda_list: [0.1]
+  # eta_list: [0.2]
+  # gamma_list: [0.3]
+  # ths * 0.2
+  alpha_list: [1e-1]
+  lambda_list: [0.1]
+  eta_list: [0.2]
+  gamma_list: [0.3]
+
+flh:
+  # alpha_list: [0.8, 1, 1.2]
+  # lambda_list: [1, 2.5, 5]
+  # eta_list: [0.8, 1, 1.2]
+  # gamma_list: [0.001]
+
+  # wisdm test
+  alpha_list: [1]
+  lambda_list: [5]
+  eta_list: [1.2]
+  gamma_list: [0.001]
+
+falcon:
+  p_list: [1]
+  beta_list: [0.01, 0.04, 0.08, 0.1, 0.2, 0.3]
+  # beta_list: [0.3] # wisdm test
+
+kliep:
+  # sigma_list: [0.9, 1, 1.5, 2, 2.5, 3]
+  # window_size_list: [30, 40, 50]
+  sigma_list: [0.9]
+  window_size_list: [50]
+
+mstat:
+  # sigma_list: [1, 1.5, 2, 2.5, 3, 3.5]
+  # window_size_list: [20, 30, 40, 50]
+  sigma_list: [2.5]
+  window_size_list: [50]
+

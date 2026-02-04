@@ -1,0 +1,25 @@
+# Optional threshold scaling per (dataset_name, algorithm).
+# Keys: dataset_name (must match config.runner.dataset_name).
+# Nested keys: algorithm short name (fs, flh, falcon, kliep, mstat).
+# Rules: factor (multiply), add (add), min (floor). Applied in that order.
+# Omit or leave empty for no scaling.
+
+wisdm:
+  fs:   { factor: 0.2 }
+  flh:  { factor: 0.4 }
+  falcon: { factor: 0.5 }
+  kliep:  { factor: 0.2 }
+  mstat:  { factor: 0.5 }
+
+occupancy:
+  fs:     { add: 2 }
+  flh:    { add: 3 }
+  falcon: { add: 2 }
+  kliep:  { add: 2 }
+  mstat:  { add: 2 }
+
+censrec:
+  fs: {factor: 0.05} # snr20
+  flh: {factor: 0.2} # snr20, +10 for snr15
+  falcon: {factor: 25} # 2 for snr15, snr20
+  mstat: {add: 0.1}

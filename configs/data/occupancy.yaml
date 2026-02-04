@@ -1,0 +1,6 @@
+_target_: datasets.occupancy.Occupancy
+dim: 4
+part: "val"
+path: "data/occupancy/occupancy.json"
+annotations_path: "data/occupancy/annotations.json"
+save_path: ${runner.save_path}

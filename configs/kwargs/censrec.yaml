@@ -1,0 +1,55 @@
+fs:
+  # alpha_list: [5e-5, 1e-5, 5e-4, 1e-4]
+  # lambda_list: [0.1, 0.2, 0.3, 0.5, 1]
+  # eta_list: [0.1, 0.2, 0.3]
+  # gamma_list: [0.01, 0.1, 0.2]
+  alpha_list: [1e-5, 1e-4]
+  lambda_list: [0.3, 0.5, 1]
+  eta_list: [0.1]
+  gamma_list: [0.01]
+
+
+flh:
+  alpha_list: [0.1]
+  lambda_list: [0.3]
+  eta_list: [0.1, 0.2, 0.5, 1]
+  gamma_list: [0.001, 0.01, 0.1]
+
+  # snr15 test
+  # alpha_list: [0.1]
+  # lambda_list: [0.3]
+  # eta_list: [0.2]
+  # gamma_list: [0.1]
+
+
+  # alpha_list: [ 0.6, 0.9, 1]
+  # lambda_list: [1, 1.5]
+  # eta_list: [0.1, 0.2]
+  # gamma_list: [0.001, 0.01]
+
+  # clean test
+  # alpha_list: [0.1]
+  # lambda_list: [0.3]
+  # eta_list: [0.1]
+  # gamma_list: [0.001]
+
+  # snr20 test
+  # alpha_list: [0.6]
+  # lambda_list: [1]
+  # eta_list: [0.1]
+  # gamma_list: [0.001]
+
+falcon:
+  p_list: [3]
+  beta_list: [0.01, 0.05, 0.1, 0.2, 0.5, 0.8, 1]
+
+
+kliep:
+  window_size_list: [50]
+  sigma_list: [0.01, 0.02, 0.025, 0.05, 0.075, 0.1, 0.2, 0.25, 0.5, 0.75, 1, 1.5, 2]
+
+
+mstat:
+  window_size_list: [50]
+  sigma_list: [0.01, 0.02, 0.025, 0.05, 0.075, 0.1, 0.2, 0.25, 0.5, 0.75, 0.9, 1, 1.2, 1.5, 2, 2.5, 5, 6, 7, 10]
+

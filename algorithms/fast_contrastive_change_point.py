@@ -181,78 +181,177 @@ def project_induced_lm(x, A, R):
         return U.T @ cv
         
         
-def compute_test_stat_ftal(X, p, beta=None, R=10, t_min=20, n_out_min=10, delta_max=150, design="hermite", threshold=math.inf):
-    
-    # Sample size
-    n = X.shape[0]
+# def compute_test_stat_ftal(X, p, beta=None, R=10, t_min=20, n_out_min=10, delta_max=150, design="hermite", threshold=math.inf):
+# class FALCON:
+#     def __init__(self, p, beta=None, R=10, t_min=20, n_out_min=0, delta_max=150, design="hermite", threshold=np.inf):
+#         self.p = p
+#         self.beta = beta
+#         self.R = R
+#         self.t_min = t_min
+#         self.n_out_min = n_out_min
+#         self.delta_max = delta_max
+#         self.design = design
+#         self.threshold = threshold
 
-    # Compute design matrix
-    if design == "poly":
-        Psi = compute_design_poly(X, p)
-    elif design == "fourier":
-        Psi = compute_design_Fourier(X, p)
-    elif design == "hermite":
-        Psi = compute_design_Hermite(X, p)
-    elif design == "legendre":
-        Psi = compute_design_Legendre(X, p)
-    elif design == "multivariate":
-        Psi = compute_design_multivariate(X)
-        p = X.shape[1] + 1
-    else:
-        raise ValueError()
+#     def compute_test_stat(self, X):
+#         # Sample size
+#         n = X.shape[0]
 
-    # Initialization
-    if beta is None:
-        beta = 1 / ((2 * R) * n)  # not fully according to formula
+#         # Compute design matrix
+#         if self.design == "poly":
+#             Psi = compute_design_poly(X, p)
+#         elif self.design == "fourier":
+#             Psi = compute_design_Fourier(X, p)
+#         elif self.design == "hermite":
+#             Psi = compute_design_Hermite(X, p)
+#         elif self.design == "legendre":
+#             Psi = compute_design_Legendre(X, p)
+#         elif self.design == "multivariate":
+#             Psi = compute_design_multivariate(X)
+#             p = X.shape[1] + 1
+#         else:
+#             raise ValueError()
 
-    T = np.zeros((n, 1))  # current values
-    S = np.zeros(n)
-    varphi = np.zeros((n, 1))
-    thetas = np.zeros((n, p))  # current parameters
-    grads = np.zeros((n, p))
-    seq = np.arange(1, n + 1)
-    A_hes = np.zeros((n, p, p))
-    b_vec = np.zeros((n, p))
-    A_hes_inv = np.zeros((n, p, p))
-    was_here = np.zeros((n,))
-    proj_rate = np.zeros((n,))
-    
-    stopping_time = -1
+#         # Initialization
+#         if self.beta is None:
+#             self.beta = 1 / ((2 * self.R) * n)  # not fully according to formula
 
-    for t in range(t_min, n):
-
-        # consider time intervals [0;t) and [0;tau), thus tau is the first point in the new distribution
-
-        for tau in range(max(n_out_min, t - n_out_min - delta_max), t - n_out_min):
-
-            grads[tau] = expit(- thetas[tau][None, :] @ Psi[:tau].T) @ Psi[:tau] - tau * expit( thetas[tau][None, :] @ Psi[t - 1][:, None]) * Psi[t - 1][None, :]
-
-            A_hes[tau] += grads[tau][:, None] @ grads[tau][None, :]
-
-
-            A_hes_inv[tau] = np.linalg.pinv(A_hes[tau], hermitian=True)
-            b_vec[tau] += (grads[tau] @ thetas[tau] + 1/beta) * grads[tau]
-            y = A_hes_inv[tau] @ b_vec[tau]
-
-
-            thetas[tau] = project_induced_lm(y, A_hes[tau], R)
-
-            if not np.allclose(y, thetas[tau]):
-                proj_rate[tau] += 1
-
-            varphi[tau] = log_expit(thetas[tau][None, :] @ Psi[:tau].T).sum() + tau * log_expit( -thetas[tau][None, :] @ Psi[t - 1][:, None]) + 2 * np.log(2) * (tau)
-            T[tau] = (t - 1) / t * T[tau] + 1 / (t) * varphi[tau]
-            
-    
-        # Check whether the test statistic exceeded the threshold
-        S[t] = np.max(T[:t])
-        if S[t] > threshold:
+#         T = np.zeros((n, 1))  # current values
+#         S = np.zeros(n)
+#         varphi = np.zeros((n, 1))
+#         thetas = np.zeros((n, p))  # current parameters
+#         grads = np.zeros((n, p))
+#         seq = np.arange(1, n + 1)
+#         A_hes = np.zeros((n, p, p))
+#         b_vec = np.zeros((n, p))
+#         A_hes_inv = np.zeros((n, p, p))
+#         was_here = np.zeros((n,))
+#         proj_rate = np.zeros((n,))
         
-            stopping_time = t
-            break
-    
-    # Array of test statistics
-    if stopping_time != -1:
-        S = S[:stopping_time + 1]
-    
-    return S, stopping_time
+#         stopping_time = -1
+
+#         for t in range(self.t_min, n):
+
+#             # consider time intervals [0;t) and [0;tau), thus tau is the first point in the new distribution
+
+#             for tau in range(max(self.n_out_min, t - self.n_out_min - self.delta_max), t - self.n_out_min):
+
+#                 grads[tau] = expit(- thetas[tau][None, :] @ Psi[:tau].T) @ Psi[:tau] - tau * expit( thetas[tau][None, :] @ Psi[t - 1][:, None]) * Psi[t - 1][None, :]
+
+#                 A_hes[tau] += grads[tau][:, None] @ grads[tau][None, :]
+
+
+#                 A_hes_inv[tau] = np.linalg.pinv(A_hes[tau], hermitian=True)
+#                 b_vec[tau] += (grads[tau] @ thetas[tau] + 1/self.beta) * grads[tau]
+#                 y = A_hes_inv[tau] @ b_vec[tau]
+
+
+#                 thetas[tau] = project_induced_lm(y, A_hes[tau], self.R)
+
+#                 if not np.allclose(y, thetas[tau]):
+#                     proj_rate[tau] += 1
+
+#                 varphi[tau] = log_expit(thetas[tau][None, :] @ Psi[:tau].T).sum() + tau * log_expit( -thetas[tau][None, :] @ Psi[t - 1][:, None]) + 2 * np.log(2) * (tau)
+#                 T[tau] = (t - 1) / t * T[tau] + 1 / (t) * varphi[tau]
+                
+        
+#             # Check whether the test statistic exceeded the threshold
+#             S[t] = np.max(T[:t])
+#             if S[t] > self.threshold:
+            
+#                 stopping_time = t
+#                 break
+        
+#         # Array of test statistics
+#         if stopping_time != -1:
+#             S = S[:stopping_time + 1]
+        
+#         return S, stopping_time
+
+class FALCON:
+    def __init__(self, p, beta=None, R=10, t_min=20, n_out_min=0, delta_max=150, design="hermite", threshold=np.inf):
+        self.p = p
+        self.beta = beta
+        self.R = R
+        self.t_min = t_min
+        self.n_out_min = n_out_min
+        self.delta_max = delta_max
+        self.design = design
+        self.threshold = threshold
+
+    def compute_test_stat(self, X):
+        
+        # Sample size
+        n = X.shape[0]
+
+        # Compute design matrix
+        if self.design == "poly":
+            Psi = compute_design_poly(X, self.p)
+        elif self.design == "fourier":
+            Psi = compute_design_Fourier(X, self.p)
+        elif self.design == "hermite":
+            Psi = compute_design_Hermite(X, self.p)
+        elif self.design == "legendre":
+            Psi = compute_design_Legendre(X, self.p)
+        elif self.design == "multivariate":
+            Psi = compute_design_multivariate(X)
+            self.p = X.shape[1] + 1
+        else:
+            raise ValueError()
+
+        # Initialization
+        if self.beta is None:
+            self.beta = 1 / ((2 * self.R) * n)  # not fully according to formula
+
+        T = np.zeros((n, 1))  # current values
+        S = np.zeros(n)
+        varphi = np.zeros((n, 1))
+        thetas = np.zeros((n, self.p))  # current parameters
+        grads = np.zeros((n, self.p))
+        A_hes = np.zeros((n, self.p, self.p))
+        b_vec = np.zeros((n, self.p))
+        A_hes_inv = np.zeros((n, self.p, self.p))
+        
+        stopping_time = -1
+
+        for t in range(n):
+
+            # consider time intervals [0;t) and [0;tau), thus tau is the first point in the new distribution
+
+            for tau in range(max(self.n_out_min+1, t - self.n_out_min - self.delta_max), t - self.n_out_min):
+
+                grads[tau] = expit(- thetas[tau][None, :] @ Psi[:tau].T) @ Psi[:tau] / tau - expit( thetas[tau][None, :] @ Psi[t - 1][:, None]) * Psi[t - 1][None, :]
+
+                A_hes[tau] += grads[tau][:, None] @ grads[tau][None, :]
+
+
+                A_hes_inv[tau] = np.linalg.pinv(A_hes[tau], hermitian=True)
+                b_vec[tau] += (grads[tau] @ thetas[tau] + 1/self.beta) * grads[tau]
+                
+
+                if t > self.t_min:
+                    y = A_hes_inv[tau] @ b_vec[tau]
+                    thetas[tau] = project_induced_lm(y, A_hes[tau], self.R)
+
+                    # if not np.allclose(y, thetas[tau]):
+                    #     proj_rate[tau] += 1
+
+                varphi[tau] = log_expit(thetas[tau][None, :] @ Psi[:tau].T).sum() / tau + log_expit( -thetas[tau][None, :] @ Psi[t - 1][:, None]) + 2 * np.log(2) 
+                T[tau] = (t - 1) / t * T[tau] + tau / (t) * varphi[tau]
+                
+        
+            # Check whether the test statistic exceeded the threshold
+            if t >= self.t_min:
+                S[t] = np.max(T[:t+1])
+                # S[t] = T[150]
+                
+            if S[t] > self.threshold:
+                stopping_time = t
+                break
+        
+        # Array of test statistics
+        if stopping_time != -1:
+            S = S[:stopping_time + 1]
+        
+
+        return S, stopping_time

@@ -127,9 +127,9 @@ class ChangePointDetector:
         self.current_grad = None
         self.current_laplacian = None
 
-        self._logZ = None
-        self._logV = None
-        self._Y = None
+        self._logZ = dict() 
+        self._logV = dict()
+        self._Y = dict()
 
         self.samples = None
         self.test_statistic = []
@@ -155,26 +155,26 @@ class ChangePointDetector:
             print('eta must be either a number or an iterable')
             return
 
-        self._logZ = np.full((n_samples + 1, n_samples + 1), None)
-        self._logV = np.full((n_samples + 1), None)
-        self._Y = np.full((n_samples + 1, n_samples + 1, self.dim), None)
+        self._logZ = dict()
+        self._logV = dict()
+        self._Y = dict()
 
         stopping_time = -1
         pred = X[0] if n_samples > 0 else 0
 
-        for i in range(n_samples):
+        for t in range(n_samples):
             self.eta = next(eta_iter)
-            x = X[i]
+            x = X[t]
             if recalc:
-                self._logZ = np.full((n_samples + 1, n_samples + 1), None)
-                self._logV = np.full((n_samples + 1), None)
-                self._Y = np.full((n_samples + 1, n_samples + 1, self.dim), None)
+                self._logZ = dict()
+                self._logV = dict()
+                self._Y = dict()
 
             if diff:
                 x -= pred
-                pred = X[i]
+                pred = X[t]
 
-            stopping_time = self.step(x, i + 1)
+            stopping_time = self.step(x, t)
             if stopping_time > 0:
                 break
 
@@ -187,7 +187,7 @@ class ChangePointDetector:
         :t: - number of iteration
         return: t, if change point is detected, else -1
         """
-        self.samples[t - 1] = x
+        self.samples[t] = x
 
         self.compute_A(x)
         self.compute_b(x)
@@ -197,14 +197,14 @@ class ChangePointDetector:
         self.EW_cumloss = np.append(self.EW_cumloss, self.EW_cumloss[-1] + EW_loss)
         self.EW_predictions.append(EW_pred)
 
-        FS_pred = self.predict_FS(t)
+        FS_pred = self.predict_FS(t+1)
         FS_loss = self.compute_loss(FS_pred)
         self.FS_cumloss = np.append(self.FS_cumloss, self.FS_cumloss[-1] + FS_loss)
         self.FS_predictions.append(FS_pred)
 
         if self.EW_cumloss[-1] - self.FS_cumloss[-1] > self.threshold:
             return t + 1
-
+        
         return -1
 
     def compute_A(self, x):
@@ -268,12 +268,12 @@ class ChangePointDetector:
         """
         mat = self.A(s, t) + (self.lambda_ / self.eta) * np.eye(self.dim)
         under_exp = self.b(s, t).T @ np.linalg.pinv(mat) @ self.b(s, t)
-        if self._logZ[s, t] is None:
+        if (s,t) not in self._logZ:
             z = 0.5 * self.dim * np.log(self.lambda_ / self.eta) - 0.5 * np.log(np.linalg.det(mat)) + 0.5 * self.eta * \
                 under_exp[0, 0]
-            self._logZ[s, t] = z
+            self._logZ[(s, t)] = z
 
-        return self._logZ[s, t]
+        return self._logZ[(s, t)]
 
     def logV(self, t):
         """
@@ -282,7 +282,7 @@ class ChangePointDetector:
         if t <= 1:
             self._logV[t] = 0
 
-        if self._logV[t] is None:
+        if t not in self._logV:
             summands = np.zeros(t)
             summands[0] = (t - 1) * np.log(1 - self.alpha) + self.logZ(1, t)
             summands[1:] = np.log(self.alpha) + np.array(
@@ -298,10 +298,9 @@ class ChangePointDetector:
         if s > t:
             return np.zeros((self.dim, 1))
 
-        if self._Y[s, t, 0] is None:
-            self._Y[s, t] = (np.linalg.pinv(self.A(s, t) + (self.lambda_ / self.eta) * np.eye(self.dim)) @ self.b(s,
-                                                                                                                  t)).flatten()
-        return self._Y[s, t]
+        if (s, t) not in self._Y:
+            self._Y[(s, t)] = (np.linalg.pinv(self.A(s, t) + (self.lambda_ / self.eta) * np.eye(self.dim)) @ self.b(s,t)).flatten()
+        return self._Y[(s, t)]
 
     def predict_FS(self, t):
         """
@@ -316,7 +315,6 @@ class ChangePointDetector:
         summands += np.log(1 - self.alpha) - self.logV(t - 1)
         scale = np.array([self.Y(t - 1 - s, t - 1) for s in range(t - 1)])
         theta = np.zeros((self.dim, 1))
-
         for i in range(self.dim):
             th, sign = logsumexp(summands, b=scale[:, i], return_sign=True)
             theta[i] = np.exp(th) * sign

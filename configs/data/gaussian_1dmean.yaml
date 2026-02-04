@@ -1,0 +1,10 @@
+_target_: datasets.Gaussian
+mu: 0
+sigma: 0.2
+shift: 2
+shift_type: "mean"
+seed: ${runner.seed}
+runs: 10
+cps: 150
+size: 300
+dim: 1
