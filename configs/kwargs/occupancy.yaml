@@ -1,0 +1,32 @@
+fs:
+  alpha_list: [1e-5]
+  lambda_list: [1]
+  eta_list: [0.5]
+  # gamma_list: [0.2, 0.3, 0.4, 0.5]
+  gamma_list: [0.4]
+  
+flh:
+  # alpha_list: [0.1, 0.3, 0.4, 0.5, 0.6]
+  # lambda_list: [0.3]
+  # eta_list: [0.3, 0.5, 0.8]
+  # gamma_list: [0.4, 0.5]
+  alpha_list: [0.1]
+  lambda_list: [0.3]
+  eta_list: [0.8]
+  gamma_list: [0.5]
+  
+falcon:
+  p_list: [1]
+  beta_list: [0.1, 0.4, 0.5, 1, 1.5, 2, 5, 8, 10]
+
+kliep:
+  # sigma_list: [0.1, 0.5, 0.8, 1, 1.5, 2, 2.5, 3]
+  # window_size_list: [15, 20, 25]
+  sigma_list: [2]
+  window_size_list: [20]
+
+mstat:
+  # sigma_list: [ 0.05, 0.1, 0.5, 0.8, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 10]
+  # window_size_list: [15, 20, 25]
+  sigma_list: [2.5]
+  window_size_list: [20]

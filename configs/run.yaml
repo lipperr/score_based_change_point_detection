@@ -1,0 +1,23 @@
+defaults:
+  - data: "wisdm"
+  - algorithm: fs
+  - kwargs: wisdm
+  - _self_
+
+runner:
+  mode: "stationary" # "changepoint"
+  seed: 1
+  save_path: "results/"
+  dataset_name: "wisdm"
+  threshold_scaling_path: "configs/threshold_scaling.yaml"
+  
+  # thresholds_csv_path: "results/stationary_fs_gaussian_1dmean_ths.csv"
+  
+  # output_names:
+  #   csv: "changepoint_flh_gaussian_1dmean_ths_default.csv"
+  #   plot: "changepoint_flh_gaussian_1dmean_default.png"
+  
+  
+
+
+    

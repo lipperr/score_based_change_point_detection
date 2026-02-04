@@ -1,0 +1,4 @@
+_target_: algorithms.fast_contrastive_change_point.FALCON
+p: 1
+beta: 0.5
+design: "hermite" # design='multivariate'

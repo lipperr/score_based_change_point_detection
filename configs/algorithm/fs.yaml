@@ -1,0 +1,14 @@
+_target_: algorithms.fs.FS
+alpha: 1e-6
+ew_params: 
+  xdim: ${data.dim}
+  lambda_: 1.5
+  eta: 0.2
+  gamma: 1e-6
+  basis: 
+    _target_: algorithms.ew.PolyBasis
+    degree: 2
+    xdim: ${data.dim}
+    include_cross: False
+  reference_score: False
+  eta_type: "const"

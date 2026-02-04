@@ -1,0 +1,10 @@
+_target_: datasets.Gaussian
+mu: 0
+sigma: 0.1
+shift: 3
+shift_type: "std"
+seed: ${runner.seed}
+runs: 10
+cps: 150
+size: 300
+dim: 1
